@@ -14,14 +14,14 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/driver")
+@RequestMapping(path = "/driver/{id}")
 public class DriverController {
     @Autowired
     private DriverService driverService;
 
     @PostMapping
-   // @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createNewDriver_whenPostDriver(@RequestBody Driver driver){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> createNewDriver (@RequestBody Driver driver) {
         Driver createdDriver = driverService.createNewDriver(driver);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(createdDriver.getId()).toUri();
@@ -29,18 +29,20 @@ public class DriverController {
     }
 
     @GetMapping
-public ResponseEntity<?> getDrivers(){
+    public ResponseEntity<?> getDrivers() {
         return ResponseEntity.ok(new ResponsePojo(HttpStatus.OK.value(), driverService.getDrivers()));
-        }
-        @PutMapping
-        public ResponseEntity<?> updateDrivers(@PathVariable Long driverId, Driver driver){
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateDrivers(@PathVariable Long driverId, Driver driver) {
         return ResponseEntity.ok().body(driverService.updateDriver(driverId, driver));
     }
+
     @DeleteMapping
-    public void deleteDrivers(@PathVariable Long driverId){
+    public void deleteDrivers(@PathVariable Long driverId) {
         driverService.deleteDriver(driverId);
 
     }
 
-    }
+}
 
